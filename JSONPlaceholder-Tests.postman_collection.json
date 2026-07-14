@@ -1,0 +1,203 @@
+{
+    "info":{
+        "name": "JSONPlaceholder-Tests",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item":[
+        {  
+            "name": "GET /posts (列表)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script":{
+                        "exec":[
+                            "pm.test(\"状态码应该是200\", function() {",
+                            "   pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Content-Type 包含 application/json\", function() {",
+                            "    var ct = pm.response.headers.get(\"Content-Type\");",
+                            "    pm.expect(ct).to.include(\"application/json\");",
+                            "});",
+                            "",
+                            "pm.test(\"响应体应该是数组\", function() {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData).to.be.an(\"array\");",
+                            "});",
+                            "",
+                            "pm.test(\"数组长度应大于 0\", function() {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.length).to.be.above(0);",
+                            "});",
+                            "",
+                            "pm.test(\"数组中每个对象应包含 id, userId, title, body 字段\", function() {",
+                            "    var jsonData = pm.response.json();",
+                            "    jsonData.forEach(function(item) {",
+                            "        pm.expect(item).to.have.property(\"id\");",
+                            "        pm.expect(item).to.have.property(\"userId\");",
+                            "        pm.expect(item).to.have.property(\"title\");",
+                            "        pm.expect(item).to.have.property(\"body\");",
+                            "    });",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                    }
+                ],
+                "request": {
+                    "method": "GET",
+                    "url": "{{base_url}}/posts"
+                }
+        },
+              
+        {
+            "name": "GET /posts/1 (单条)",
+            "event": [
+                {
+                    "listen":"test",
+                    "script":{
+                        "exec":[
+                            "pm.test(\"状态码应该是200\", function() {",
+                            "   pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Content-Type包含 application/json\", function() {",
+                            "    var ct = pm.response.headers.get(\"Content-Type\");",
+                            "   pm.expect(ct).to.include(\"application/json\");",
+                            "});",
+                            "",
+                            "pm.test(\"id应该是1\", function() {",
+                            "   var jsonData = pm.response.json();",
+                            "   pm.expect(jsonData.id).to.equal(1);",    
+                            "});",
+                            "",
+                            "pm.test(\"应该包含id, userId, title, body字段\", function(){",
+                            "   var jsonData = pm.response.json();",
+                            "       pm.expect(jsonData).to.have.property(\"userId\");",
+                            "       pm.expect(jsonData).to.have.property(\"title\");",
+                            "       pm.expect(jsonData).to.have.property(\"body\");",
+                            "});",
+                            "",
+                            "pm.test(\"响应时间应该低于 2000ms\", function() {",
+                            "       pm.expect(pm.response.responseTime).to.be.below(2000);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "url": "{{base_url}}/posts/1"
+            }
+        
+        },    
+        {
+            "name": "POST /posts",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"状态码应该是201 CREATED\", function() {",
+                            "   pm.response.to.have.status(201);",
+                            "});",
+                            "",
+                            "pm.test(\"Content-Type 包含 application/json\", function() {",
+                            "   var ct = pm.response.headers.get(\"Content-Type\");",
+                            "   pm.expect(ct).to.include(\"application/json\");",
+                            "});",
+                            "pm.test(\"应该返回id 且值为 101\", function(){",
+                            "   var jsonData = pm.response.json();",
+                            "   pm.expect(jsonData).to.have.property(\"id\");",
+                            "   pm.expect(jsonData.id).to.equal(101);",
+                            "});",
+                            "",
+                            "pm.test(\"返回的title 应该等于发送的 title\", function() {",
+                            "   var jsonData = pm.response.json();",
+                            "   var expectedTitle = pm.iterationData.get(\"title\");",
+                            "   pm.expect(jsonData.title).to.equal(expectedTitle);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "url": "{{base_url}}/posts",
+                "header":[
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"title\": \"{{title}}\", \"body\": \"{{body}}\", \"userId\": 1}"
+                }
+            }
+        },
+        {
+            "name": "PUT /posts/1",
+            "event":[
+                {
+                    "listen": "test",
+                    "script":{
+                        "exec":[
+                            "pm.test(\"状态码应该是200\", function() {",
+                            "   pm.response.to.have.status(200);",
+                            "});",
+                            "pm.test(\"id应该保持为1\", function() {",
+                            "   var jsonData = pm.response.json();",
+                            "   pm.expect(jsonData.id).to.equal(1);",
+                            "});",
+                            "pm.test(\"updated title 应该等于发送的 title\", function() {",
+                            "   var jsonData = pm.response.json();",
+                            "   var expectedTitle = pm.iterationData.get(\"title\");",
+                            "pm.expect(jsonData.title).to.equal(expectedTitle);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "PUT",
+                "url": "{{base_url}}/posts/1",
+                "header":[
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body":{
+                    "mode":"raw",
+                    "raw":"{\"title\": \"{{title}}\", \"body\": \"{{body}}\", \"userId\": 1}"
+                }
+            }
+        },
+        {
+            "name": "DELETE /posts/1",
+            "event": [
+                {
+                    "listen": "test",
+                    "script":{
+                        "exec":[
+                            "pm.test(\"状态码应该是200\", function() {",
+                            "   pm.response.to.have.status(200);",
+                            "});"
+                        ],
+                        "type":"text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "url":"{{base_url}}/posts/1"
+            }
+        }
+    ]
+}
+
+
