@@ -1,3 +1,4 @@
+[![API Tests](https://github.com/huabao-bao/jsonplaceholder-api-tests/actions/workflows/test.yml/badge.svg)](https://github.com/huabao-bao/jsonplaceholder-api-tests/actions/workflows/test.yml)
 JSONPlaceholder API Tests
 API Tests · Workflow runs · huabao-bao/jsonplaceholder-api-tests · GitHub
 
